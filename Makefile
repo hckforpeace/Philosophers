@@ -1,4 +1,4 @@
-SRC= main.c display.c mutex.c routines.c threads.c time.c parser.c 
+SRC= main.c display.c mutex.c routines.c threads.c time.c parser.c data.c
 OBJ= $(addprefix src/,$(SRC:.c=.o))
 NAME= philo
 CC= cc

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routines.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:58:07 by pbeyloun          #+#    #+#             */
-/*   Updated: 2024/08/08 18:50:31 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/09 18:52:00 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void    lock_choice(t_philo *philo)
     }
 }
 
-void	ssleep(int think)
+void	ssleep(t_philo *philo)
 {
-    usleep(think);
+	display(philo, 's');
+    usleep(philo->time_to_sleep * 1000);
 }

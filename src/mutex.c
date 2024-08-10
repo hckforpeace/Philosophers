@@ -3,50 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   mutex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:37:50 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/08 19:24:45 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/09 18:40:40 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	init_mutexs(t_data *data, int nbr)
-{
-	init_forks(data, nbr);
-	if (!data->forks)
-		return ;
+void	init_mutexs(t_data *data)
+{	
+	init_forks(data, data->numb_philo);
 	if (pthread_mutex_init(data->write_lock, NULL) != 0)
 	{
 		mutex_destroy(data->forks, data->numb_philo);
-		free(data->forks);
-		free(data);
-		exit(1);
+		free_exit(data);
+	}
+	if (pthread_mutex_init(data->dead_lock, NULL) != 0)
+	{
+		mutex_destroy(data->write_lock, 1);
+		mutex_destroy(data->forks, data->numb_philo);
+		free_exit(data);
+	}
+	if (pthread_mutex_init(data->checkeat_lock, NULL) != 0)
+	{
+		mutex_destroy(data->dead_lock, 1);
+		mutex_destroy(data->write_lock, 1);
+		mutex_destroy(data->forks, data->numb_philo);
+		free_exit(data);
 	}
 	init_mutexsaux(data);
 }
 
 void	init_mutexsaux(t_data *data)
 {
-	if (pthread_mutex_init(data->checkeat_lock, NULL) != 0)
-	{
-		mutex_destroy(data->write_lock, 1);
-		mutex_destroy(data->forks, data->numb_philo);
-		mutex_destroy(data->checkeat_lock, 1);
-		free(data->forks);
-		free(data);
-		exit(1);
-	}
 	if (pthread_mutex_init(data->checklstmeal_lock, NULL) != 0)
 	{
+		mutex_destroy(data->checkeat_lock, 1);
+		mutex_destroy(data->dead_lock, 1);
 		mutex_destroy(data->write_lock, 1);
 		mutex_destroy(data->forks, data->numb_philo);
-		mutex_destroy(data->checkeat_lock, 1);
-		mutex_destroy(data->checklstmeal_lock, 1);
-		free(data->forks);
-		free(data);
-		exit(1);
+		free_exit(data);
 	}
 }
 
@@ -55,19 +53,15 @@ void init_forks(t_data *data, int nbr)
 	pthread_mutex_t	*forks;
 	int				i;
 
+	forks = data->forks;
 	i = 0;
-	forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * nbr);
-	if (!forks)
-		return ;
 	while (i < nbr)
 	{
 		if (pthread_mutex_init(&forks[i], NULL) != 0)
 		{
-			write(2, "Error mutex creation exiting program !\n", 39);
-			mutex_destroy(forks, nbr);
-			free(forks);
-			data->forks = NULL;
-			return ;
+			write(2, "Error mutex initialising mutexs exiting program !\n", 39);
+			mutex_destroy(forks, i);
+			free_exit(data);	
 		}
 		i++;
 	}
@@ -101,6 +95,6 @@ int	assign_forks(int side, int totalforks, int id)
 		if (id == (totalforks - 1))
 			return (0);
 		else
-			return (id + 1);
+			return (id);
 	}
 }

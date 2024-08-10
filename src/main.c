@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:34:05 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/08 19:01:38 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:29:02 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,20 @@ int main(int argc, char **argv)
 		else
 			write(2, "Error(s) in arguments\n", 22);
 	}
+	printf("done!!\n");
     return (0);
 }
-
 void	simulation(char **args, int argc)
 {
 	t_data	*data;
 
-	data = (struct s_data*)malloc(sizeof(struct s_data*));
+	data = (struct s_data*)malloc(sizeof(struct s_data));
 	if (!data)
 		return ;
-	init_mutexs(data, ft_atoi(args[0]));
 	data->numb_philo = ft_atoi(args[0]);
-	*(data->dead) = 1;
+	alloc_dataparams(data);
+	init_mutexs(data);
+	*(data->dead) = 0;
 	data->time_todie = ft_atoi(args[1]);
 	data->philos = init_philos(args, data->forks, data);
 	if (argc == 6)
@@ -54,14 +55,14 @@ void	join(t_data *data)
 	{
 		if (pthread_join(data->thread[i], NULL) != 0)
 		{
-			write(2, "An error has occured while joining a thread\n", 44);
+			ft_putstr_fd("An error has occured while joining a thread\n", 2);
 			exit(1);
 		}
 		i++;
 	}
 	if (pthread_join(*data->monitor, NULL) != 0)
 	{
-		write(2, "An error has occured while joining a thread\n", 44);
+		ft_putstr_fd("An error has occured while joining a thread\n", 2);
 		exit(1);
 	}
 }
@@ -72,10 +73,8 @@ t_philo	*init_philos(char **argv, pthread_mutex_t *forks, t_data *data)
 	int		i;
 
 	i = 0;
-	philos = (struct s_philo*)malloc(sizeof(struct s_philo*) * ft_atoi(argv[0]));
-	if (!philos)
-		return (NULL);
-	while (i < ft_atoi(argv[0]))
+	philos = data->philos;
+	while (i < data->numb_philo)
 	{
 		(&philos[i])->time_to_eat = ft_atoi(argv[2]);
 		(&philos[i])->time_to_sleep = ft_atoi(argv[3]);
@@ -99,4 +98,5 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 		philo->changelstmeal_lock = data->checklstmeal_lock;
 		philo->dead_lock = data->dead_lock;
 		philo->is_eating = 0;
+		philo->start_time = get_timestamp();
 }

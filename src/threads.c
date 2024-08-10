@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:24:04 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/08 19:37:47 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/09 23:17:55 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,20 @@ void	init_threads(t_data *data)
 {
 	int			i;
 
-	data->thread = (pthread_t *)malloc(sizeof(pthread_t) * data->numb_philo);
-	if (!data->thread)
-		return ;
 	i = 0;
 	while (i < data->numb_philo)
 	{
 		if (pthread_create(&data->thread[i], NULL, &routine, &data->philos[i]) != 0)
 		{
-			write(2, "Error in thread creation !\n", 27);
+			ft_putstr_fd("Error in thread creation !\n", 2);
 			exit(1);
 		}
 		i++;
 	}
 	if (pthread_create(data->monitor, NULL, &monitor, data) != 0)
 	{
-			write(2, "Error in thread creation !\n", 27);
-			exit(1);
+		ft_putstr_fd("Error in thread creation !\n", 2);
+		exit(1);
 	}
 }
 
@@ -47,9 +44,12 @@ void	*routine(void *arg)
 		if (!is_dead(philo))
 			eat(philo);
 		if (!is_dead(philo))
-			ssleep(philo->time_to_sleep);
+			ssleep(philo);
 		if (!is_dead(philo))
+		{
+			display(philo, 't');
 			usleep(10);
+		}
 	}
 	display(philo, 'd');
 	return (NULL);
@@ -93,10 +93,16 @@ void	*monitor(void	*arg)
 int	has_starved(t_data *data, t_philo *philo)
 {
 	int	ret;
+	long long value;
 
 	pthread_mutex_lock(data->checklstmeal_lock);
-	if ((get_timestamp() - philo->last_meal) > data->time_todie)
+	value = (get_timestamp() - philo->last_meal);
+	printf("\n\n\n %lld %lld\n\n\n", get_timestamp(), philo->last_meal);
+	if (value > (data->time_todie))
+	{
+		printf("\nhereeeee value : %lld ttd: %d !!! \n", value, data->time_todie);
 		ret = 1;
+	}
 	else
 		ret = 0;	
 	pthread_mutex_unlock(data->checklstmeal_lock);
@@ -107,11 +113,16 @@ int	is_full(t_data *data, t_philo *philo)
 {
 	int	ret;
 
-	pthread_mutex_lock(data->checkeat_lock);
-	if (philo->meals_eaten > data->max_eat)
-		ret = 1;
+	if (data->max_eat > 0)
+	{
+		pthread_mutex_lock(data->checkeat_lock);
+		if (philo->meals_eaten > data->max_eat)
+			ret = 1;
+		else
+			ret = 0;
+		pthread_mutex_unlock(data->checkeat_lock);
+	}
 	else
 		ret = 0;
-	pthread_mutex_unlock(data->checkeat_lock);
 	return (ret);
 }

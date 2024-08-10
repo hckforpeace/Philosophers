@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/08 19:41:33 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:28:43 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ typedef struct s_philo
 	int					is_eating;
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;	
-	unsigned int		last_meal;
+	long long			last_meal;
+	long long			start_time;
 
 	pthread_mutex_t		*left_fork;
 	pthread_mutex_t		*right_fork;
@@ -67,7 +68,7 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 
 //mutex
 int	assign_forks(int side, int totalforks, int id);
-void	init_mutexs(t_data *data, int nbr);
+void	init_mutexs(t_data *data);
 void	init_mutexsaux(t_data *data);
 void	mutex_destroy(pthread_mutex_t *mutex, int nbr);
 void init_forks(t_data *data, int nbr);
@@ -84,8 +85,8 @@ int	is_full(t_data *data, t_philo *philo);
 void	eat(t_philo *philosopher);
 
 //time.c
-void	set_lstmeal(t_philo *philo);
-long	get_timestamp();
+void		set_lstmeal(t_philo *philo);
+long long	get_timestamp();
 
 //display.c
 void	display(t_philo *philo, char state);
@@ -94,9 +95,14 @@ void	display(t_philo *philo, char state);
 void    eat(t_philo *philo);
 void    incr_eat(t_philo *philo);
 void    lock_choice(t_philo *philo);
-void	ssleep(int think);
+void	ssleep(t_philo *philo);
 
 //parser.c
 int	parser(char **argv);
 int	is_overflow(char *str);
+
+// data.c
+void alloc_dataparams(t_data *data);
+void	free_exit(t_data *data);
+
 #endif
