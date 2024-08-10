@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:24:04 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/09 23:17:55 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/10 19:37:13 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,13 @@
 void	init_threads(t_data *data)
 {
 	int			i;
+	long long	time;
 
+	time = get_timestamp();
 	i = 0;
 	while (i < data->numb_philo)
 	{
+		data->philos[i].first_timestamp = time;
 		if (pthread_create(&data->thread[i], NULL, &routine, &data->philos[i]) != 0)
 		{
 			ft_putstr_fd("Error in thread creation !\n", 2);
@@ -38,20 +41,13 @@ void	*routine(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo*)arg;
-	set_lstmeal(philo);
 	while (!is_dead(philo))
 	{
-		if (!is_dead(philo))
-			eat(philo);
-		if (!is_dead(philo))
-			ssleep(philo);
-		if (!is_dead(philo))
-		{
-			display(philo, 't');
-			usleep(10);
-		}
+		display(philo, 't');
+		if (!eat(philo))
+			break ;
+		ssleep(philo);
 	}
-	display(philo, 'd');
 	return (NULL);
 }
 
@@ -93,14 +89,11 @@ void	*monitor(void	*arg)
 int	has_starved(t_data *data, t_philo *philo)
 {
 	int	ret;
-	long long value;
 
 	pthread_mutex_lock(data->checklstmeal_lock);
-	value = (get_timestamp() - philo->last_meal);
-	printf("\n\n\n %lld %lld\n\n\n", get_timestamp(), philo->last_meal);
-	if (value > (data->time_todie))
+	if (> (data->time_todie))
 	{
-		printf("\nhereeeee value : %lld ttd: %d !!! \n", value, data->time_todie);
+		display(philo, 'd');
 		ret = 1;
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:34:05 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/09 19:29:02 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/10 19:06:01 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,4 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 		philo->changelstmeal_lock = data->checklstmeal_lock;
 		philo->dead_lock = data->dead_lock;
 		philo->is_eating = 0;
-		philo->start_time = get_timestamp();
 }

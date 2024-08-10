@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/09 19:28:43 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/10 19:05:54 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_philo
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;	
 	long long			last_meal;
-	long long			start_time;
+	long long			first_timestamp;
 
 	pthread_mutex_t		*left_fork;
 	pthread_mutex_t		*right_fork;
