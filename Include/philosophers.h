@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/10 19:05:54 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/11 16:10:35 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,34 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 
 
 //mutex
-int	assign_forks(int side, int totalforks, int id);
+int		assign_forks(int side, int totalforks, int id);
 void	init_mutexs(t_data *data);
 void	init_mutexsaux(t_data *data);
 void	mutex_destroy(pthread_mutex_t *mutex, int nbr);
-void init_forks(t_data *data, int nbr);
+void 	init_forks(t_data *data, int nbr);
 
 //threads.c
 void	init_threads(t_data *data);
 void	*routine(void *arg);
-int	is_dead(t_philo *philo);
+int		is_dead(t_philo *philo);
 void	*monitor(void *arg);
-int	has_starved(t_data *data, t_philo *philo);
-int	is_full(t_data *data, t_philo *philo);
-
-//cycle.c
-void	eat(t_philo *philosopher);
+int		has_starved(t_data *data, t_philo *philo);
+int		is_full(t_data *data, t_philo *philo);
 
 //time.c
 void		set_lstmeal(t_philo *philo);
 long long	get_timestamp();
+long long	time_diff(long long past, long long pres);
+int			thread_sleep(long long time);
 
 //display.c
 void	display(t_philo *philo, char state);
 
 //routine.c
-void    eat(t_philo *philo);
+int		eat(t_philo *philo);
+int		lock_choice(t_philo *philo);
 void    incr_eat(t_philo *philo);
-void    lock_choice(t_philo *philo);
-void	ssleep(t_philo *philo);
+int		ssleep(t_philo *philo);
 
 //parser.c
 int	parser(char **argv);

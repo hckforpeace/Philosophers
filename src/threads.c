@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:24:04 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/10 19:37:13 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/11 15:06:14 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	*routine(void *arg)
 		display(philo, 't');
 		if (!eat(philo))
 			break ;
-		ssleep(philo);
+		if (!ssleep(philo))
+			break;
 	}
 	return (NULL);
 }
@@ -91,7 +92,7 @@ int	has_starved(t_data *data, t_philo *philo)
 	int	ret;
 
 	pthread_mutex_lock(data->checklstmeal_lock);
-	if (> (data->time_todie))
+	if (time_diff(philo->last_meal, get_timestamp()) > (data->time_todie))
 	{
 		display(philo, 'd');
 		ret = 1;

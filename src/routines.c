@@ -6,23 +6,25 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:58:07 by pbeyloun          #+#    #+#             */
-/*   Updated: 2024/08/09 18:52:00 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/11 15:05:53 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void    eat(t_philo *philo)
+int	eat(t_philo *philo)
 {
-    lock_choice(philo);
+    if (!lock_choice(philo));
+		return (0);
     display(philo, 'e');
     philo->is_eating = 1;
-    usleep(philo->time_to_eat * 1000);
+	thread_sleep(philo->time_to_eat);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
     philo->is_eating = 0;
     set_lstmeal(philo);
     incr_eat(philo);
+	return (1);
 }
 
 void    incr_eat(t_philo *philo)
@@ -32,26 +34,55 @@ void    incr_eat(t_philo *philo)
     pthread_mutex_unlock(philo->counteat_lock);
 }
 
-void    lock_choice(t_philo *philo)
+int	lock_choice(t_philo *philo)
 {
     if (philo->id % 2)
     {
-        pthread_mutex_lock(philo->left_fork);
-        display(philo, 'l');
-        pthread_mutex_lock(philo->right_fork);
-        display(philo, 'r');
+		if (lock_mutex(philo, LEFT, 0))
+			return (0);
+		if (lock_mutex(philo, RIGHT, 1))
+			return (0);
+		return (1);
     }
     else
     {
-        pthread_mutex_lock(philo->right_fork);
-        display(philo, 'r');
-        pthread_mutex_lock(philo->left_fork);
-        display(philo, 'l');
+		if (lock_mutex(philo, RIGHT, 0))
+			return (0);
+		if (lock_mutex(philo, LEFT, 1))
+			return (0);
+		return (1);
     }
 }
 
-void	ssleep(t_philo *philo)
+int	ssleep(t_philo *philo)
 {
 	display(philo, 's');
-    usleep(philo->time_to_sleep * 1000);
+    thread_sleep(philo->time_to_sleep);
+}
+int	lock_mutex(t_philo *philo, int side, int liberate)
+{
+	if (side == LEFT)
+	{
+		if (!is_dead(philo))
+		{
+			if (liberate)
+				pthread_mutex_unlock(philo->right_fork);
+			return (0);
+		}
+		pthread_mutex_lock(philo->left_fork);
+		display(philo, 'l');
+		return (1);
+	}
+	else
+	{
+		if (!is_dead(philo))
+		{
+			if (liberate)
+				pthread_mutex_unlock(philo->left_fork);
+			return (0);
+		}
+		pthread_mutex_lock(philo->right_fork);
+		display(philo, 'r');
+		return (1);
+	}
 }

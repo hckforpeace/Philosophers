@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 14:52:13 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/10 19:22:01 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/11 14:48:06 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,16 @@ long long	get_timestamp()
 long long	time_diff(long long past, long long pres)
 {
 	return (pres - past);
+}
+int	thread_sleep(long long time)
+{
+	long long	start_time;
+
+	start_time = get_timestamp();
+	while (get_timestamp() - start_time < (unsigned long long)time)
+	{
+		if (usleep(10) != 0)
+			return (0);
+	}
+	return (1);
 }
