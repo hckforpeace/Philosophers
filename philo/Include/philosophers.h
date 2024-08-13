@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 13:49:50 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/13 18:19:10 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_data
 	pthread_mutex_t		*checklstmeal_lock;
 
 	pthread_t			*thread;
-	pthread_t			*monitor;
 	t_philo				*philos;
 }	t_data;
 
@@ -77,9 +76,9 @@ void 	init_forks(t_data *data, int nbr);
 void	init_threads(t_data *data);
 void	*routine(void *arg);
 int		is_dead(t_philo *philo);
-void	*monitor(void *arg);
+void	monitor(t_data *data);
 int		has_starved(t_data *data, t_philo *philo);
-int		is_full(t_data *data, t_philo *philo);
+int		are_full(t_data *data, t_philo *philo);
 
 //time.c
 void		set_lstmeal(t_philo *philo);
@@ -97,6 +96,7 @@ void    incr_eat(t_philo *philo);
 int		ssleep(t_philo *philo);
 int	lock_mutex(t_philo *philo, int side, int liberate);
 void	unlock_choice(t_philo *philo);
+int	think(t_philo *philo);
 
 //parser.c
 int	parser(char **argv);

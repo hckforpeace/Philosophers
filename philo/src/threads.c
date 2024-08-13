@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:24:04 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 13:55:37 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/13 19:17:18 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ void	init_threads(t_data *data)
 		}
 		i++;
 	}
-	if (pthread_create(data->monitor, NULL, &monitor, data) != 0)
-	{
-		ft_putstr_fd("Error in thread creation !\n", 2);
-		exit(1);
-	}
 }
 
 void	*routine(void *arg)
@@ -42,15 +37,17 @@ void	*routine(void *arg)
 	t_philo *philo;
 
 	philo = (t_philo*)arg;
+	if ((philo->id + 1) % 2 == 0)
+		usleep(200);
 	while (!is_dead(philo))
 	{
-		if (!display(philo, 't'))
-			break ;
 		if (!eat(philo))
+			break ;
+		if (!think(philo))
 			break ;
 		if (!ssleep(philo))
 			break;
-		usleep(500);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -58,19 +55,18 @@ void	*routine(void *arg)
 int	is_dead(t_philo *philo)
 {
 	int state;
+
 	pthread_mutex_lock(philo->dead_lock);
 	state = *(philo->dead);
 	pthread_mutex_unlock(philo->dead_lock);
 	return (state);
 }
 
-void	*monitor(void	*arg)
+void	monitor(t_data *data)
 {
 	int	i;
 	t_philo *philos;
-	t_data	*data;
 
-	data = (t_data*)arg;
 	philos = data->philos;
 	i = 0;
 	while (1)
@@ -82,23 +78,19 @@ void	*monitor(void	*arg)
 			pthread_mutex_lock(data->dead_lock);
 			data->dead = 1;
 			pthread_mutex_unlock(data->dead_lock);
-			usleep(500);
 			display(&philos[i], 'd');
 			break ;
 		}
-		if (is_full(data, &philos[i]))
+		if (are_full(data, philos))
 		{
 			pthread_mutex_lock(data->dead_lock);
 			data->dead = 1;
 			pthread_mutex_unlock(data->dead_lock);
-			// usleep(500);
-			// display(&philos[i], 'e');
 			break ;
 		}
-		usleep(500);
 		i++;
+		usleep(500);
 	}
-	return (NULL);
 }
 
 int	has_starved(t_data *data, t_philo *philo)
@@ -113,14 +105,26 @@ int	has_starved(t_data *data, t_philo *philo)
 	return (ret);
 }
 
-int	is_full(t_data *data, t_philo *philo)
+int	are_full(t_data *data, t_philo *philos)
 {
-	int	ret;
+	int	i;
 
-	ret = 0;
-	pthread_mutex_lock(data->checkeat_lock);
-	if (philo->meals_eaten == data->max_eat)
-		ret = 1;
-	pthread_mutex_unlock(data->checkeat_lock);
-	return (ret);
+	i = 0;
+	if (data->max_eat >= 0)
+	{
+		pthread_mutex_lock(data->checkeat_lock);
+		while (i < data->numb_philo)
+		{
+			// printf("\nchecking philo: %d ", i);
+			if (philos[i].meals_eaten < data->max_eat)
+			{
+				pthread_mutex_unlock(data->checkeat_lock);
+				return (0);
+			}
+			i++;
+		}
+		pthread_mutex_unlock(data->checkeat_lock);
+		return (1);
+	}
+	return (0);
 }

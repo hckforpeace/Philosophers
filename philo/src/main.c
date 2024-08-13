@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
+/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:34:05 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 13:46:35 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/13 18:17:04 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ void	simulation(char **args, int argc)
 	else
 		data->max_eat = -1;
 	init_threads(data);
+	monitor(data);
 	join(data);
+	destroy_mutexs(data);
+	free_exit(data, 0);
 }
 
 void	join(t_data *data)
@@ -58,11 +61,6 @@ void	join(t_data *data)
 			exit(1);
 		}
 		i++;
-	}
-	if (pthread_join(*(data->monitor), NULL) != 0)
-	{
-		ft_putstr_fd("An error has occured while joining a thread\n", 2);
-		exit(1);
 	}
 }
 
