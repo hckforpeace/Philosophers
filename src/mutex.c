@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 18:37:50 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/09 18:40:40 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/12 15:16:28 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,20 @@ void	init_mutexs(t_data *data)
 	if (pthread_mutex_init(data->write_lock, NULL) != 0)
 	{
 		mutex_destroy(data->forks, data->numb_philo);
-		free_exit(data);
+		free_exit(data, 1);
 	}
 	if (pthread_mutex_init(data->dead_lock, NULL) != 0)
 	{
 		mutex_destroy(data->write_lock, 1);
 		mutex_destroy(data->forks, data->numb_philo);
-		free_exit(data);
+		free_exit(data, 1);
 	}
 	if (pthread_mutex_init(data->checkeat_lock, NULL) != 0)
 	{
 		mutex_destroy(data->dead_lock, 1);
 		mutex_destroy(data->write_lock, 1);
 		mutex_destroy(data->forks, data->numb_philo);
-		free_exit(data);
+		free_exit(data, 1);
 	}
 	init_mutexsaux(data);
 }
@@ -44,7 +44,7 @@ void	init_mutexsaux(t_data *data)
 		mutex_destroy(data->dead_lock, 1);
 		mutex_destroy(data->write_lock, 1);
 		mutex_destroy(data->forks, data->numb_philo);
-		free_exit(data);
+		free_exit(data, 1);
 	}
 }
 
@@ -61,7 +61,7 @@ void init_forks(t_data *data, int nbr)
 		{
 			write(2, "Error mutex initialising mutexs exiting program !\n", 39);
 			mutex_destroy(forks, i);
-			free_exit(data);	
+		free_exit(data, 1);
 		}
 		i++;
 	}

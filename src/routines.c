@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:58:07 by pbeyloun          #+#    #+#             */
-/*   Updated: 2024/08/11 15:05:53 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/13 13:51:41 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,29 @@
 
 int	eat(t_philo *philo)
 {
-    if (!lock_choice(philo));
+    if (lock_choice(philo) == 0)
 		return (0);
-    display(philo, 'e');
-    philo->is_eating = 1;
+    if (!display(philo, 'e'))
+		return (0);
 	thread_sleep(philo->time_to_eat);
-    pthread_mutex_unlock(philo->left_fork);
-    pthread_mutex_unlock(philo->right_fork);
-    philo->is_eating = 0;
+	unlock_choice(philo);
     set_lstmeal(philo);
     incr_eat(philo);
 	return (1);
+}
+
+void	unlock_choice(t_philo *philo)
+{
+	if (philo->id % 2)
+    {
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+    }
+    else
+    {
+		pthread_mutex_unlock(philo->right_fork);
+		pthread_mutex_unlock(philo->left_fork);
+    }
 }
 
 void    incr_eat(t_philo *philo)
@@ -37,18 +49,18 @@ void    incr_eat(t_philo *philo)
 int	lock_choice(t_philo *philo)
 {
     if (philo->id % 2)
-    {
-		if (lock_mutex(philo, LEFT, 0))
+    { 	
+		if (lock_mutex(philo, LEFT, 0) == 0)
 			return (0);
-		if (lock_mutex(philo, RIGHT, 1))
+		if (lock_mutex(philo, RIGHT, 1) == 0)
 			return (0);
 		return (1);
     }
     else
     {
-		if (lock_mutex(philo, RIGHT, 0))
+		if (lock_mutex(philo, RIGHT, 0) == 0)
 			return (0);
-		if (lock_mutex(philo, LEFT, 1))
+		if (lock_mutex(philo, LEFT, 1) == 0)
 			return (0);
 		return (1);
     }
@@ -56,14 +68,20 @@ int	lock_choice(t_philo *philo)
 
 int	ssleep(t_philo *philo)
 {
-	display(philo, 's');
-    thread_sleep(philo->time_to_sleep);
+	if (!is_dead(philo))
+	{
+		if (!display(philo, 's'))
+			return (0);
+    	thread_sleep(philo->time_to_sleep);
+		return (1);
+	}
+	return (0);
 }
 int	lock_mutex(t_philo *philo, int side, int liberate)
 {
 	if (side == LEFT)
 	{
-		if (!is_dead(philo))
+		if (is_dead(philo))
 		{
 			if (liberate)
 				pthread_mutex_unlock(philo->right_fork);
@@ -75,7 +93,7 @@ int	lock_mutex(t_philo *philo, int side, int liberate)
 	}
 	else
 	{
-		if (!is_dead(philo))
+		if (is_dead(philo))
 		{
 			if (liberate)
 				pthread_mutex_unlock(philo->left_fork);

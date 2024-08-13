@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:34:05 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/10 19:06:01 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/13 13:46:35 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int main(int argc, char **argv)
 		else
 			write(2, "Error(s) in arguments\n", 22);
 	}
-	printf("done!!\n");
     return (0);
 }
 void	simulation(char **args, int argc)
@@ -35,7 +34,7 @@ void	simulation(char **args, int argc)
 	data->numb_philo = ft_atoi(args[0]);
 	alloc_dataparams(data);
 	init_mutexs(data);
-	*(data->dead) = 0;
+	data->dead = 0;
 	data->time_todie = ft_atoi(args[1]);
 	data->philos = init_philos(args, data->forks, data);
 	if (argc == 6)
@@ -60,7 +59,7 @@ void	join(t_data *data)
 		}
 		i++;
 	}
-	if (pthread_join(*data->monitor, NULL) != 0)
+	if (pthread_join(*(data->monitor), NULL) != 0)
 	{
 		ft_putstr_fd("An error has occured while joining a thread\n", 2);
 		exit(1);
@@ -88,7 +87,7 @@ t_philo	*init_philos(char **argv, pthread_mutex_t *forks, t_data *data)
 void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks)
 {
 		philo->id = id;
-		philo->dead = data->dead;
+		philo->dead = &data->dead;
 		philo->meals_eaten = 0;
 		philo->numb_philo = data->numb_philo;
 		philo->left_fork = &forks[assign_forks(LEFT, data->numb_philo, id)];
@@ -97,5 +96,4 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 		philo->counteat_lock = data->checkeat_lock;
 		philo->changelstmeal_lock = data->checklstmeal_lock;
 		philo->dead_lock = data->dead_lock;
-		philo->is_eating = 0;
 }

@@ -1,4 +1,4 @@
-SRC= main.c display.c mutex.c routines.c threads.c time.c parser.c data.c
+SRC= main.c mutex.c routines.c threads.c time.c parser.c data.c
 OBJ= $(addprefix src/,$(SRC:.c=.o))
 NAME= philo
 CC= cc
@@ -20,3 +20,5 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	make fclean -C libft
+
+re: fclean all

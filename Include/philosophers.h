@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/11 16:10:35 by pierre           ###   ########.fr       */
+/*   Updated: 2024/08/13 13:49:50 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ typedef struct s_philo
 	int					id;
 	int					*dead;
 	int					meals_eaten;
+	int					max_meal;
 	int					numb_philo;
-	int					is_eating;
 	unsigned int		time_to_eat;
 	unsigned int		time_to_sleep;	
 	long long			last_meal;
@@ -43,7 +43,7 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	int					*dead;
+	int					dead;
 	int					numb_philo;
 	int					max_eat;
 	int					time_todie;
@@ -88,13 +88,15 @@ long long	time_diff(long long past, long long pres);
 int			thread_sleep(long long time);
 
 //display.c
-void	display(t_philo *philo, char state);
+int			display(t_philo *philo, char state);
 
 //routine.c
 int		eat(t_philo *philo);
 int		lock_choice(t_philo *philo);
 void    incr_eat(t_philo *philo);
 int		ssleep(t_philo *philo);
+int	lock_mutex(t_philo *philo, int side, int liberate);
+void	unlock_choice(t_philo *philo);
 
 //parser.c
 int	parser(char **argv);
@@ -102,6 +104,9 @@ int	is_overflow(char *str);
 
 // data.c
 void alloc_dataparams(t_data *data);
-void	free_exit(t_data *data);
+void	free_exit(t_data *data, int exit);
+
+//clear.c
+void	destroy_mutexs(t_data *code);
 
 #endif
