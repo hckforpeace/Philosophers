@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 12:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 18:19:36 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:21:49 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	destroy_mutexs(t_data *data)
 	pthread_mutex_destroy(data->checkeat_lock);
 }
 
-int	display(t_philo *philo, char state)
+void	display(t_philo *philo, char state)
 {
 	long long time;
 	
@@ -76,5 +76,4 @@ int	display(t_philo *philo, char state)
 	else if (state == 'd')
 		printf("%09lld %d died\n", time, philo->id + 1);
 	pthread_mutex_unlock(philo->write_lock);
-	return (1);
 }

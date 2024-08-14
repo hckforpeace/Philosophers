@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 14:52:13 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 18:54:47 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/14 18:57:25 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	set_lstmeal(t_philo *philo)
 		exit(1);
 	}
 	philo->last_meal = get_timestamp(); 
+	philo->meals_eaten++;
 	pthread_mutex_unlock(philo->changelstmeal_lock);
 }
 

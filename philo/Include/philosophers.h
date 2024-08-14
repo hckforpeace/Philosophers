@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 18:19:10 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:22:19 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ long long	time_diff(long long past, long long pres);
 int			thread_sleep(long long time);
 
 //display.c
-int			display(t_philo *philo, char state);
+void		display(t_philo *philo, char state);
 
 //routine.c
 int		eat(t_philo *philo);

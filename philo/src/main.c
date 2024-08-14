@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:34:05 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/13 18:17:04 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:42:04 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,16 @@ void	init_dataphilo(t_data *data, t_philo *philo, int id, pthread_mutex_t *forks
 		philo->dead = &data->dead;
 		philo->meals_eaten = 0;
 		philo->numb_philo = data->numb_philo;
-		philo->left_fork = &forks[assign_forks(LEFT, data->numb_philo, id)];
-		philo->right_fork = &forks[assign_forks(RIGHT, data->numb_philo, id)];
+		if (data->numb_philo == 2 && id == 1)
+		{
+			philo->left_fork = &forks[0];
+			philo->right_fork = &forks[1];
+		}
+		else
+		{
+			philo->left_fork = &forks[assign_forks(LEFT, data->numb_philo, id)];
+			philo->right_fork = &forks[assign_forks(RIGHT, data->numb_philo, id)];
+		}
 		philo->write_lock = data->write_lock;
 		philo->counteat_lock = data->checkeat_lock;
 		philo->changelstmeal_lock = data->checklstmeal_lock;
