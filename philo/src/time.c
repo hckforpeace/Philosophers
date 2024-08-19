@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 14:52:13 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/14 18:57:25 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:19:11 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,15 @@ long long	time_diff(long long past, long long pres)
 }
 int	thread_sleep(long long time)
 {
-	long long	start_time;
+	long long	start;
+	long long	now;
 
-	start_time = get_timestamp();
-	while (get_timestamp() - start_time < time)
+	start = get_timestamp();
+	now = start;
+	while (now - start < time)
 	{
-		if (usleep(10) != 0)
-			return (0);
+		usleep(100);
+		now = get_timestamp();
 	}
 	return (1);
 }

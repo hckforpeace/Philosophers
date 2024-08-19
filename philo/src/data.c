@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 12:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/14 17:21:49 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:28:01 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ void	display(t_philo *philo, char state)
 	pthread_mutex_lock(philo->write_lock);
 	time = get_timestamp() - philo->first_timestamp;
 	if (state == 'l')
-		printf("%09lld %d has taken left fork\n", time, philo->id + 1);
+		printf("%09lld %d has taken a fork\n", time, philo->id + 1);
 	else if (state == 'r')
-		printf("%09lld %d has taken right fork\n", time, philo->id + 1);
+		printf("%09lld %d has taken a fork\n", time, philo->id + 1);
 	else if (state == 'e')
 		printf("%09lld %d is eating\n", time, philo->id + 1);
 	else if (state == 's')

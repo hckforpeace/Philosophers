@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:58:07 by pbeyloun          #+#    #+#             */
-/*   Updated: 2024/08/14 19:10:39 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/19 17:33:34 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 int	eat(t_philo *philo)
 {
+	if (philo->id % 2 == 0)
+		usleep(100);
     lock_choice(philo);
 	if (is_dead(philo))
 		return (0);
 	display(philo, 'e');
 	set_lstmeal(philo);
 	thread_sleep(philo->time_to_eat);
-    // incr_eat(philo);
 	unlock_choice(philo);
 	return (1);
 }
@@ -40,9 +41,7 @@ void	unlock_choice(t_philo *philo)
 
 int	lock_choice(t_philo *philo)
 {
-	if (philo->id % 2 == 1)
-		usleep(100);
-    if (philo->id == 0)
+    if (philo->id % 2)
     {
 		pthread_mutex_lock(philo->right_fork);
 		if (is_dead(philo))
@@ -51,13 +50,6 @@ int	lock_choice(t_philo *philo)
 			return (0); 
 		}
 		display(philo, 'r');
-		if (philo->numb_philo == 1)
-		{
-			pthread_mutex_unlock(philo->right_fork);
-			while (is_dead(philo) == 0)
-				continue ;
-			return (0);
-		}
 		pthread_mutex_lock(philo->left_fork);
 		if (is_dead(philo))
 		{
