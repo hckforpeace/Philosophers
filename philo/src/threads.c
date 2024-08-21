@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 13:24:04 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/19 17:47:27 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:48:17 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void	init_threads(t_data *data)
 	i = 0;
 	while (i < data->numb_philo)
 	{
-		data->philos[i].first_timestamp = get_timestamp();
 		data->philos[i].last_meal = get_timestamp();
+		data->philos[i].first_timestamp = get_timestamp();
 		if (pthread_create(&data->thread[i], NULL, &routine, &data->philos[i]) != 0)
 		{
 			ft_putstr_fd("Error in thread creaidtion !\n", 2);
@@ -53,11 +53,22 @@ static void	delay(t_philo *philo)
 void	*routine(void *arg)
 {
 	t_philo *philo;
+	int		i;
 
+	i = 0;
 	philo = (t_philo*)arg;
-	thread_sleep(philo->time_to_eat  * ((philo->id ) % 2 == 1));
-	thread_sleep(philo->time_to_eat * (philo->numb_philo % 2
-				&& (philo->id ) == philo->numb_philo - 1));
+/* 	usleep(philo->time_to_eat  * ((philo->id ) % 2 == 1));
+	usleep(philo->time_to_eat * (philo->numb_philo % 2
+				&& (philo->id ) == philo->numb_philo - 1)); */
+/* 	if ((philo->id % 2) == 0)
+		thread_sleep(10); */
+	// if (philo->id == 0)
+		// thread_sleep(200);
+	if (philo->numb_philo % 2 == 0)
+	{
+		if (philo->id % 2 == 0)
+			thread_sleep(10);		
+	}
 	while (!is_dead(philo))
 	{
 		if (!eat(philo))
@@ -66,8 +77,11 @@ void	*routine(void *arg)
 			break;
 		if (!think(philo))
 			break ;
-		delay(philo);
-		// usleep(100);
+		// if (philo->id % 2 >= philo->numb_philo / 2)
+		// if (philo->id <= philo->numb_philo / 2)
+			// thread_sleep(1);
+/* 		if (philo->id % 2 == 0)
+			thread_sleep(10); */
 	}
 	return (NULL);
 }
@@ -107,6 +121,13 @@ void	monitor(t_data *data)
 			display(&philos[i], 'd');
 			break ;
 		}
+		if (are_full(data, philos))
+		{
+			pthread_mutex_lock(data->dead_lock);
+			data->dead = 1;
+			pthread_mutex_unlock(data->dead_lock);
+			break ;
+		}
 /* 		
 if (has_starved(data, &philos[i]))
 		{
@@ -125,7 +146,7 @@ if (has_starved(data, &philos[i]))
 		}
 		i++;
 		 */
-		usleep(500);
+		usleep(100);
 	}
 }
 

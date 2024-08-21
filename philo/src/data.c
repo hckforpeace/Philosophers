@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 12:18:23 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/19 17:28:01 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:34:36 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ void alloc_dataparams(t_data *data)
 	if (!data->forks || !data->write_lock || !data->dead_lock
 		|| !data->checkeat_lock || !data->checklstmeal_lock
 		|| !data->thread || !data->philos)
-	{
-
 		free_exit(data, 1);
-	}
 }
 void	free_exit(t_data *data, int code)
 {

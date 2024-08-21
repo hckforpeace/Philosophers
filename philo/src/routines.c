@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:58:07 by pbeyloun          #+#    #+#             */
-/*   Updated: 2024/08/19 17:33:34 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:55:24 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 
 int	eat(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-		usleep(100);
+/* 	if (philo->id % 2 == 0)
+		usleep(100); */
     lock_choice(philo);
 	if (is_dead(philo))
 		return (0);
 	display(philo, 'e');
 	set_lstmeal(philo);
 	thread_sleep(philo->time_to_eat);
+	// usleep(philo->time_to_eat * 1000);
 	unlock_choice(philo);
 	return (1);
 }
@@ -43,6 +44,7 @@ int	lock_choice(t_philo *philo)
 {
     if (philo->id % 2)
     {
+		usleep(500);
 		pthread_mutex_lock(philo->right_fork);
 		if (is_dead(philo))
 		{
@@ -87,6 +89,7 @@ int	ssleep(t_philo *philo)
 	{
 		display(philo, 's');
     	thread_sleep(philo->time_to_sleep);
+		// usleep(philo->time_to_sleep);
 		return (1);
 	}
 	return (0);
@@ -134,8 +137,10 @@ int	think(t_philo *philo)
 		return (0);
 	else
 	{
+		// thread_sleep(9);
 		display(philo, 't');
-		usleep(100);
+		// if ((philo->id % 2) == 0)
+		// 	thread_sleep(200);
 		return (1);
 	}
 }

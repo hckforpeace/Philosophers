@@ -6,7 +6,7 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 14:52:13 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/19 17:19:11 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:01:02 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	thread_sleep(long long time)
 	now = start;
 	while (now - start < time)
 	{
-		usleep(100);
+		usleep(1);
 		now = get_timestamp();
 	}
 	return (1);
