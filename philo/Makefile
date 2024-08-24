@@ -1,24 +1,21 @@
-SRC= main.c mutex.c routines.c threads.c time.c parser.c data.c
+SRC= main.c init.c parser.c threads.c utils.c libft_utils.c display.c
 OBJ= $(addprefix src/,$(SRC:.c=.o))
 NAME= philo
 CC= cc
-# CFLAGS= -Wall -Werror -Wextra 
+CFLAGS= -Wall -Werror -Wextra
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	make -C libft
-	$(CC) $(CFLAGS) $^ -lft -L./libft -o $@ -lpthread
+	$(CC) $(CFLAGS) $^ -o $@ -pthread
 
 %.o: %.c
 	$(CC) $(CFLAGS) -I./Include -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
-	make clean -C libft
 
 fclean: clean
 	rm -f $(NAME)
-	make fclean -C libft
 
 re: fclean all

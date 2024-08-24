@@ -1,16 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atof.c                                          :+:      :+:    :+:   */
+/*   libft_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/21 15:08:48 by pierre            #+#    #+#             */
-/*   Updated: 2024/07/23 15:47:14 by pierre           ###   ########.fr       */
+/*   Created: 2024/08/22 23:50:27 by pierre            #+#    #+#             */
+/*   Updated: 2024/08/23 00:43:34 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "philosophers.h"
+
+int	numb_len(long num, int base)
+{
+	int	n;
+
+	n = 0;
+	if (num < 0)
+		n++;
+	while (num / base != 0)
+	{
+		num = num / base;
+		n++;
+	}
+	n++;
+	return (n);
+}
+
+int	ft_pow(int i, int pow)
+{
+	if (pow == 0)
+		return (1);
+	else
+		return (i * ft_pow(i, pow - 1));
+}
 
 static double	get_decimal(const char *num)
 {
@@ -42,4 +66,16 @@ double	ft_atof(const char *string)
 	decimal = get_decimal(&string[numb_len(result, 10)]);
 	result += decimal;
 	return (result);
+}
+
+int	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
 }

@@ -6,17 +6,28 @@
 /*   By: pbeyloun <pbeyloun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 17:05:41 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/08 19:41:25 by pbeyloun         ###   ########.fr       */
+/*   Updated: 2024/08/23 13:03:00 by pbeyloun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+static int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
 
 static int	is_integer(char *str)
 {
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
+	if (*str == '-' || (str[0] == '0' && str[1] != '\0'))
+		return (0);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -25,6 +36,7 @@ static int	is_integer(char *str)
 	}
 	return (1);
 }
+
 int	parser(char **argv)
 {
 	while (*argv)
@@ -51,4 +63,13 @@ int	is_overflow(char *str)
 	if (vald != vali)
 		return (1);
 	return (0);
+}
+
+void	ft_putstr_fd(char *str, int fd)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	if (len > 0)
+		write(fd, str, len);
 }
