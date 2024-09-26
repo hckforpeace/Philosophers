@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 23:39:00 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/23 11:12:35 by pierre           ###   ########.fr       */
+/*   Updated: 2024/09/26 23:26:59 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ long long	get_timestamp(void)
 	return (time_stamp);
 }
 
-void	thread_sleep(t_data *data, long long time)
+void	ft_sleep(t_data *data, long long time)
 {
 	long long	start;
 
@@ -68,10 +68,9 @@ void	thread_sleep(t_data *data, long long time)
 	}
 }
 
-void	set_dead(t_data *data, t_philo *philo)
+int	is_dead(t_data *data)
 {
-	display(data, philo, 'd');
-	pthread_mutex_lock(&data->dead_lock);
-	data->dead = 1;
-	pthread_mutex_unlock(&data->dead_lock);
+	if (get_timestamp() - data->last_meal > data->ttd)
+		return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pierre <pierre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 00:47:43 by pierre            #+#    #+#             */
-/*   Updated: 2024/08/23 11:08:23 by pierre           ###   ########.fr       */
+/*   Updated: 2024/09/26 23:54:47 by pierre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,23 @@
 
 /* displays state with time_stamp first checks if philo is not 
 dead and then locks write mutex before writing */
-void	display(t_data *data, t_philo *philo, char state)
+void	display(t_data *data, char state)
 {
 	long long	time;
 
-	pthread_mutex_lock(&data->write);
 	time = get_timestamp() - data->first_timestamp;
-	if (!is_dead(data))
-	{
-		if (state == 'f')
-			printf("%09lld %d has taken a fork\n", time, philo->id + 1);
-		else if (state == 'e')
-			printf("%09lld %d is eating\n", time, philo->id + 1);
-		else if (state == 's')
-			printf("%09lld %d is sleeping\n", time, philo->id + 1);
-		else if (state == 't')
-			printf("%09lld %d is thinking\n", time, philo->id + 1);
-		else if (state == 'd')
-			printf("%09lld %d has died\n", time, philo->id + 1);
-	}
-	pthread_mutex_unlock(&data->write);
+	sem_wait(data->write);
+	if (state == 'f')
+		printf("%09lld %d has taken a fork\n", time, data->id + 1);
+	else if (state == 'e')
+		printf("%09lld %d is eating\n", time, data->id + 1);
+	else if (state == 's')
+		printf("%09lld %d is sleeping\n", time, data->id + 1);
+	else if (state == 't')
+		printf("%09lld %d is thinking\n", time, data->id + 1);
+	else if (state == 'd')
+		printf("%09lld %d has died\n", time, data->id + 1);
+	sem_post(data->write);
 }
 
 void	display_error(int type)
